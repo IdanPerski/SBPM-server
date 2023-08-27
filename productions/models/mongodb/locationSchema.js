@@ -1,11 +1,9 @@
 const mongoose = require("mongoose");
-
 const locationSchema = new mongoose.Schema({
   name: { type: String, required: true },
   address: {
-    city: String,
-    street: String,
-    required: true,
+    city: { type: String, required: true },
+    street: { type: String, required: true },
   },
   contactPerson: {
     name: String,
@@ -17,6 +15,6 @@ const locationSchema = new mongoose.Schema({
   },
 });
 
-const Location = mongoose.model("Location ", locationSchema);
+const Location = mongoose.model("Location", locationSchema);
 
 module.exports = Location;

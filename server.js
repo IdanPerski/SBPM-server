@@ -10,6 +10,10 @@ const app = express();
 app.use(express.json());
 app.use(router);
 
+const createFakeLocation = require("./faker/createFakeLocation");
+const deleteAllDataBase = require("./faker/deleteAllDataBase");
+const createMultipleFakeData = require("./faker/helpers/createMultipleFakeData");
+
 app.use((error, req, res, next) => {
   console.log(textColor.danger("internal error"));
   return handleError(res, 500, `server internal error: ${error}`);
@@ -19,4 +23,7 @@ app.listen(PORT, () => {
   console.log(textColor.safe("The server is listening to port " + PORT));
 
   connectToDb();
+  // createMultipleFakeData(10, createFakeLocation);
+  // createFakeLocation();
+  deleteAllDataBase();
 });

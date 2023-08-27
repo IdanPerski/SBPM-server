@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const textColor = require("../../chalk/terminalColors");
-const _dataBase = "production_db";
+const _dataBase = "sbpm";
 
 mongoose
   .connect(`mongodb://127.0.0.1:27017/${_dataBase}`)
