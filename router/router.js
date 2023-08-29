@@ -3,16 +3,18 @@ const textColor = require("../chalk/terminalColors");
 const { handleError } = require("../utils/handleErrors");
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.get("/addProduction", (req, res) => {
+  console.log(textColor.lemon("call from front"));
+  res.send("hello from server");
+});
+
+router.post("/addProduction", async (req, res) => {
   console.log(textColor.safe("post production"));
   try {
-    /* TODO- check req.body 
-        - validate production
-
-        -normalize production
-
-        create production
-        */
+    //  TODO- check req.body
+    // - validate production
+    // -normalize production
+    // create production
   } catch (error) {
     console.log(`post error at addProduction ${error}`);
   }

@@ -4,15 +4,18 @@ const PORT = process.env.PORT;
 const textColor = require("./chalk/terminalColors");
 const router = require("./router/router");
 const connectToDb = require("./DB/dbService");
+const {
+  deleteAllDataBase,
+  generateFakeData,
+} = require("./faker/fakeDataService");
+const { handleError } = require("./utils/handleErrors");
+const cors = require("./middelwares/cors");
 
 const app = express();
 
+app.use(cors);
 app.use(express.json());
 app.use(router);
-
-const createFakeLocation = require("./faker/createFakeLocation");
-const deleteAllDataBase = require("./faker/deleteAllDataBase");
-const createMultipleFakeData = require("./faker/helpers/createMultipleFakeData");
 
 app.use((error, req, res, next) => {
   console.log(textColor.danger("internal error"));
@@ -23,7 +26,7 @@ app.listen(PORT, () => {
   console.log(textColor.safe("The server is listening to port " + PORT));
 
   connectToDb();
-  // createMultipleFakeData(10, createFakeLocation);
-  // createFakeLocation();
-  deleteAllDataBase();
+
+  // generateFakeData();
+  // deleteAllDataBase();
 });
