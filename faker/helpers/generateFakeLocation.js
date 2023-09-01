@@ -1,6 +1,6 @@
 const { faker } = require("@faker-js/faker");
-const Location = require("../productions/models/mongodb/locationSchema");
-const textColor = require("../chalk/terminalColors");
+const Location = require("../../productions/models/mongodb/locationSchema");
+const textColor = require("../../chalk/terminalColors");
 const getRandomArrayElement = (array) =>
   array[Math.floor(Math.random() * array.length)];
 
@@ -34,17 +34,4 @@ const generateFakeLocation = () => {
   };
 };
 
-const createFakeLocation = async () => {
-  try {
-    const fakeLocation = generateFakeLocation();
-    const newLocation = new Location(fakeLocation);
-    await newLocation.save();
-    console.log(
-      textColor.lemon("Fake location created successfully:", newLocation),
-    );
-  } catch (error) {
-    console.log(textColor.danger("Error creating fake location:", error));
-  }
-};
-
-module.exports = createFakeLocation;
+module.exports = generateFakeLocation;

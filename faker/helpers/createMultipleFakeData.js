@@ -1,16 +1,22 @@
 const textColor = require("../../chalk/terminalColors");
+const createFakeData = require("./createFakeData");
 
-const createMultipleFakeData = async (count, fuctionCreation) => {
+const createMultipleFakeData = async (count, generateFunction, newData) => {
   try {
     for (let i = 0; i < count; i++) {
-      await fuctionCreation();
+      await createFakeData(
+        generateFunction(),
+        newData,
+        `Fake  created successfully: `,
+        "Error creating fake data",
+      );
     }
   } catch (error) {
     console.log(textColor.danger("createMultipleFakeData failed", error));
   }
   console.log(
-    textColor.lemon(
-      `createMultipleFakeData function successed ${fuctionCreation} wass running ${count} times`,
+    textColor.safe(
+      `createMultipleFakeData function successed- wass running ${count} times`,
     ),
   );
 };

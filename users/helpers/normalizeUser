@@ -1,0 +1,24 @@
+const normalizeUser = async (user) => {
+  const name = { ...user.name };
+  const address = { ...user.address };
+  const contact = { ...user.contact };
+  const roles = user.roles;
+  const image = {
+    ...user.image,
+    alt: (user.image.alt = user.image.alt || "user image"),
+    url:
+      user.image.url ||
+      "https://cdn.pixabay.com/photo/2016/04/01/10/11/avatar-1299805_960_720.png",
+  };
+
+  return {
+    ...user,
+    name,
+    image,
+    address,
+    contact,
+    roles,
+  };
+};
+
+module.exports = normalizeUser;
