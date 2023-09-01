@@ -1,6 +1,5 @@
 const config = require("config");
-const connectToDb = require("../../DB/dbService");
-const validateProduction = require("../helpers/validations/");
+const connectToDb = require("../DB/dbService");
 const textColors = require("../chalk/terminalColors");
 const { createError, handleError } = require("../utils/handleErrors");
 const Production = require("./models/mongodb/productionSchema");
@@ -12,6 +11,7 @@ const createProduction = async (normalizedProduction) => {
     try {
       let production = new Production(normalizedProduction);
       await production.save();
+      console.log(textColors.safe("production created at mongo"));
       return Promise.resolve(production);
     } catch (error) {
       console.log(error);
@@ -20,3 +20,5 @@ const createProduction = async (normalizedProduction) => {
   }
   return Promise.resolve("createCard not in mongodb");
 };
+
+exports.createProduction = createProduction;

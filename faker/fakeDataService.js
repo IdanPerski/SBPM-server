@@ -8,6 +8,11 @@ const Production = require("../productions/models/mongodb/productionSchema");
 const textColor = require("../chalk/terminalColors");
 const generateProdutionType = require("./helpers/generateProdutionType");
 const createFakeData = require("./helpers/createFakeData");
+
+const config = require("config");
+const { createError } = require("../utils/handleErrors");
+const DB = config.get("DB");
+
 const generateFakeData = async () => {
   const sportsTypes = [
     "Football",
@@ -64,6 +69,44 @@ const deleteAllDataBase = async () => {
   }
 };
 
+const getFakeDataFromMongo = async (schema) => {
+  if (DB === "MONGODB") {
+    try {
+      const data = await schema.find({}, { password: 0, __v: 0 });
+      return Promise.resolve(data);
+    } catch (error) {
+      console.log(textColor.danger(`getFakedata catch from ${schema} `));
+      return createError("Mongoose", error);
+    }
+  }
+  return Promise.resolve("get users not in mongodb");
+};
+
+/* const getFakeUsers = async () => {
+  if (DB === "MONGODB") {
+    try {
+      const users = await Person.find({}, { password: 0, __v: 0 });
+      return Promise.resolve(users);
+    } catch (error) {
+      console.log(textColor.danger("getFakeUsers catch"));
+      return createError("Mongoose", error);
+    }
+  }
+  return Promise.resolve("get users not in mongodb");
+};
+const getFakeLoction = async () => {
+  if (DB === "MONGODB") {
+    try {
+      const location = await Location.find({}, { password: 0, __v: 0 });
+      return Promise.resolve(location);
+    } catch (error) {
+      console.log(textColor.danger("getFakeLocation catch"));
+      return createError("Mongoose", error);
+    }
+  }
+  return Promise.resolve("get users not in mongodb");
+}; */
+
 // generateProdutionType();
 
-module.exports = { generateFakeData, deleteAllDataBase };
+module.exports = { generateFakeData, deleteAllDataBase, getFakeDataFromMongo };
