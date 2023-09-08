@@ -32,8 +32,7 @@ router.post("/addProduction", async (req, res) => {
 
     // -normalize production
     production = await normalizeProduction(production, user);
-    // create production
-    console.log(textColor.lemon(JSON.stringify(production, null, 2)));
+
     production = await createProduction(production);
     // console.log(textColor.lemon(production));
   } catch (error) {

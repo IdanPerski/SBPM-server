@@ -3,7 +3,7 @@ const normalizeProduction = async (production, userId) => {
 
   return {
     date: production.date,
-    type: production.type,
+    ProductionType: production.type,
     location: production.location,
     fieldCrew: production.fieldCrew,
     controlRoomCrew: production.controlRoomCrew,

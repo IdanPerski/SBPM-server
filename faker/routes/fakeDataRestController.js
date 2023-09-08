@@ -24,7 +24,6 @@ router.get("/addProduction", async (req, res) => {
     const location = await getFakeDataFromMongo(Location);
     const prodType = await getFakeDataFromMongo(ProductionType);
     const fakeData = { users, location, prodType };
-    console.log(fakeData);
     return res.send(fakeData);
   } catch (error) {
     return handleError(res, error.status || 500, error.message);
