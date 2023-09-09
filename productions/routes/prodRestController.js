@@ -5,7 +5,7 @@ const terminalColors = require("../../chalk/terminalColors");
 const normalizeProduction = require("../helpers/validations/normalizeProduction");
 const prodRouter = express.Router();
 
-router.get("/addProduction", (req, res) => {
+prodRouter.get("/addProduction", (req, res) => {
   console.log(terminalColors.lemon("call from front"));
   res.send("hello from server");
 });

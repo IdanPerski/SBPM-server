@@ -1,7 +1,5 @@
 const mongoose = require("mongoose");
 
-const Role = require("./roleSchema");
-
 const refAtach = (ref) => {
   const dataBaseValue = {
     type: mongoose.Schema.Types.ObjectId,
