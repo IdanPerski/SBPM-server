@@ -1,19 +1,19 @@
 const Joi = require("joi");
 const validateProductionWithJoi = (production) => {
   const productionValidationSchema = Joi.object({
-    audioEngineer: Joi.string().allow(""),
-    cameraOperators: Joi.array().items(Joi.string()),
-    cg: Joi.string().allow(""),
+    audioEngineer: Joi.object().allow(""),
+    cameraOperators: Joi.array().items(Joi.object()),
+    cg: Joi.object().allow(""),
     date: Joi.date(),
-    director: Joi.string().allow(""),
-    editor: Joi.string().allow(""),
-    location: Joi.string(),
-    producer: Joi.array().items(Joi.string().allow("")),
-    talents: Joi.array().items(Joi.string().allow("")),
-    technician: Joi.array().items(Joi.string().allow("")),
-    type: Joi.string(),
-    visionMixerOperator: Joi.string().allow(""),
-    vtr: Joi.array().items(Joi.string().allow("")),
+    director: Joi.object().allow(""),
+    editor: Joi.object().allow(""),
+    location: Joi.object(),
+    producer: Joi.array().items(Joi.object().allow("")),
+    talents: Joi.array().items(Joi.object().allow("")),
+    technician: Joi.array().items(Joi.object().allow("")),
+    type: Joi.object(),
+    visionMixerOperator: Joi.object().allow(""),
+    vtr: Joi.array().items(Joi.object().allow("")),
   });
 
   return productionValidationSchema.validate(production);

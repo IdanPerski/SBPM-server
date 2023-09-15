@@ -1,29 +1,33 @@
+const { lte } = require("lodash");
 const terminalColors = require("../../../chalk/terminalColors");
-const normalizeIDtoObject = require("./normalizeIDtoObject");
+const Person = require("../../../users/models/mongodb/personSchema");
+const Location = require("../../models/mongodb/locationSchema");
+const ProductionType = require("../../models/mongodb/producionTypeSchema");
 
 const normalizeProduction = async (production, userId) => {
-  // await normalizeIDtoObject(production.controlRoomCrew.director, "director");
-  // await normalizeIDtoObject(
-  //   production.controlRoomCrew.visionMixerOperator,
-  //   "visionMixerOperator",
-  // );
-  // await normalizeIDtoObject(production.controlRoomCrew.cg, "cg");
-  // normalizeIDtoObject(production.controlRoomCrew.editor, "editor");
-  // await normalizeIDtoObject(
-  //   production.controlRoomCrew.audioEngineer,
-  //   "audioEngineer",
-  // );
+  const { director, cg, visionMixerOperator, editor, audioEngineer, vtr } =
+    production.controlRoomCrew;
+  console.log(production);
   const wheather = "callApi"; //TODO- call to wheather api and add it to prodction object according to the date
-
-  return {
+  const normalizeProduction = {
     date: production.date,
-    ProductionType: production.type,
+    productionType: production.type,
     location: production.location,
     fieldCrew: production.fieldCrew,
-    controlRoomCrew: production.controlRoomCrew,
+
+    controlRoomCrew: {
+      director: director,
+      cg: cg,
+      visionMixerOperator: visionMixerOperator,
+      editor: editor,
+      audioEngineer: audioEngineer,
+      vtr: vtr,
+    },
     talents: production.talents,
     wheather: wheather,
     createdBy: userId,
   };
+
+  return normalizeProduction;
 };
 module.exports = normalizeProduction;

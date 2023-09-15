@@ -1,5 +1,5 @@
-const currentTime = () => {
-  const currentDate = new Date();
+const currentTime = (date = new Date()) => {
+  const currentDate = date;
   const addLeadingZero = (dateObject) => dateObject.toString().padStart(2, "0");
 
   const year = currentDate.getFullYear();

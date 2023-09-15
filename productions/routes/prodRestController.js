@@ -1,20 +1,29 @@
 const express = require("express");
 const { handleError } = require("../../utils/handleErrors");
-const { createProduction } = require("../productionsAccessDataService");
+const {
+  createProduction,
+  getProductions,
+  getProductionsForMainTable,
+} = require("../productionsAccessDataService");
 const terminalColors = require("../../chalk/terminalColors");
 const normalizeProduction = require("../helpers/validations/normalizeProduction");
 const prodRouter = express.Router();
 
-prodRouter.get("/addProduction", (req, res) => {
-  console.log(terminalColors.lemon("call from front"));
-  res.send("hello from server");
+prodRouter.get("/", async (req, res) => {
+  console.log(terminalColors.safe("call from homePage"));
+
+  try {
+    const productions = await getProductionsForMainTable();
+    return res.send(productions);
+  } catch (error) {
+    return handleError(res, error.status || 500, error.message);
+  }
 });
 
 prodRouter.post("/addProduction", async (req, res) => {
   console.log(terminalColors.safe("post production"));
   try {
     let production = req.body;
-    // console.log(production);
     const user = production.user_id;
 
     // -  user Authentication (middelware)
@@ -26,9 +35,8 @@ prodRouter.post("/addProduction", async (req, res) => {
 
     // -normalize production
     production = await normalizeProduction(production, user);
-    console.log(production);
+    console.log(terminalColors.lemon("normalizeProduction:"), production);
     production = await createProduction(production);
-    // console.log(textColor.lemon(production));
   } catch (error) {
     console.log(`post error at addProduction ${error}`);
   }

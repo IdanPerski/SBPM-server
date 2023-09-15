@@ -6,6 +6,7 @@ const roleSchema = new mongoose.Schema({
     ref: "Person",
   },
   role: String,
+  paymentRate: Number,
 });
 
 const Role = mongoose.model("Role", roleSchema);
