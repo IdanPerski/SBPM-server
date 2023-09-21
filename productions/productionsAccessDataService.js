@@ -31,11 +31,11 @@ const getProductionsForMainTable = async () => {
       const productionDetails = await Promise.all(
         productions.map(async (_production) => {
           const _id = _production._id;
-          const locationName = _production.location.name;
+          const locationName = `${_production.location.name}, ${_production.location.address.city}`;
           const { day, month, year } = currentTime(_production.date);
 
           const date = `${day}/${month}/${year}`;
-          console.log(terminalColors.lemon(_production.location.address.city));
+          // console.log(terminalColors.lemon(_production.location.address.city));
 
           const weatherData = await getWeatherIcon(
             _production.location.address.city,
@@ -53,6 +53,9 @@ const getProductionsForMainTable = async () => {
       console.log("Extracted Values:", productionDetails);
       return Promise.resolve(productionDetails);
     } catch (error) {
+      console.log(
+        terminalColors.danger("error from getProductionsForMainTable"),
+      );
       error.status = 404;
       return createError("Mongoose", error);
     }

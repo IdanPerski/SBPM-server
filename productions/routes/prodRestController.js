@@ -7,6 +7,7 @@ const {
 } = require("../productionsAccessDataService");
 const terminalColors = require("../../chalk/terminalColors");
 const normalizeProduction = require("../helpers/validations/normalizeProduction");
+const auth = require("../../auth/authService");
 const prodRouter = express.Router();
 
 prodRouter.get("/", async (req, res) => {
@@ -39,6 +40,20 @@ prodRouter.post("/addProduction", async (req, res) => {
     production = await createProduction(production);
   } catch (error) {
     console.log(`post error at addProduction ${error}`);
+  }
+});
+
+prodRouter.delete("/:id", auth, async (req, res) => {
+  try {
+    const productionId = req.params.id;
+    const user = req.user;
+    // console.log(req);
+    console.log(terminalColors.danger(productionId));
+    console.log(terminalColors.danger(req));
+    const productionToDelete = await deleteCard(productionId, user);
+    return res.send(productionToDelete);
+  } catch (error) {
+    return handleError(res, error.status || 500, error.message);
   }
 });
 

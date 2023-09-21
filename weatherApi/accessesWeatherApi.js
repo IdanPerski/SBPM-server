@@ -1,9 +1,10 @@
 const axios = require("axios");
 const terminalColors = require("../chalk/terminalColors");
 const { handleError } = require("../utils/handleErrors");
+require("dotenv").config();
 
-const apiKey = "ce01827d3fc7e96a3c653254a32c4c3b";
-//needs to go to env file
+const apiKey = process.env.WEATHER_API_KEY;
+
 axios;
 const getWeatherIcon = async (cityName) => {
   const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}`;
@@ -11,19 +12,14 @@ const getWeatherIcon = async (cityName) => {
   try {
     const response = await axios.get(apiUrl);
     const data = response.data;
-
-    if (!data.weather || data.weather.length === 0) {
-      throw new Error("No weather data found");
-    }
-
     const icon = data.weather[0].icon;
 
     const iconUrl = `http://openweathermap.org/img/wn/${icon}@2x.png`;
-    const iconImg = `<img src=${iconUrl}>`;
+    const iconImg = `<img src=${iconUrl} style="width:4em">`;
     return iconImg;
   } catch (error) {
-    console.error("Error fetching weather API:", error);
-    handleError(res, 400, `Error fetching weather API: ${error}`);
+    console.log("Error fetching weather API:", error);
+    handleError(error, 400, "Error fetching weather API");
   }
 };
 

@@ -1,5 +1,5 @@
 {
-"tokenGenerator": "jwt",
+"TOKEN_GENERATOR": "jwt",
  "LOGGER": "morgan",
  "DB":"MONGODB",
  "VALIDATOR":"joi",
