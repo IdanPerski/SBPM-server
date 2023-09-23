@@ -7,8 +7,7 @@ const terminalColors = require("../chalk/terminalColors");
 const ProductionType = require("./models/mongodb/producionTypeSchema");
 const currentTime = require("../utils/timeService");
 const getWeatherIcon = require("../weatherApi/accessesWeatherApi");
-
-const fieldCrew = "fieldCrew";
+const Person = require("../users/models/mongodb/personSchema");
 const DB = config.get("DB");
 const getProductions = async () => {
   if (DB === "MONGODB") {
@@ -23,6 +22,25 @@ const getProductions = async () => {
     }
   }
   return Promise.resolve("getProductions not in mongodb");
+};
+const getProductionById = async (id) => {
+  console.log(terminalColors.danger(id));
+  if (DB === "MONGODB") {
+    try {
+      const production = await Production.findById(id);
+
+      if (!production) {
+        throw new Error("Production not found");
+      }
+
+      console.log(production, "production");
+      return Promise.resolve(production);
+    } catch (error) {
+      error.status = 404;
+      return createError("Mongoose", error);
+    }
+  }
+  return Promise.resolve("production not in mongodb");
 };
 const getProductionsForMainTable = async () => {
   if (DB === "MONGODB") {
@@ -78,6 +96,46 @@ const createProduction = async (normalizedProduction) => {
   return Promise.resolve("createProduction not in mongodb");
 };
 
+async function getCrewMembersDetails(crewMemberIds) {
+  try {
+    if (!Array.isArray(crewMemberIds)) {
+      const crewMember = await Person.findById(crewMemberIds);
+      if (crewMember) {
+        return Promise.resolve({
+          firstName: crewMember.firstName,
+          lastName: crewMember.lastName,
+          _id: crewMember._id,
+        });
+      }
+    } else {
+      const crewMembers = await Promise.all(
+        crewMemberIds.map(async (crewMemberId) => {
+          const crewMember = await Person.findById(crewMemberId);
+          if (crewMember) {
+            return {
+              firstName: crewMember.firstName,
+              lastName: crewMember.lastName,
+              _id: crewMember._id,
+            };
+          }
+          return null; // Handle the case when a crew member is not found
+        }),
+      );
+
+      // Filter out any null values (crew members not found)
+      const filteredCrewMembers = crewMembers.filter(
+        (member) => member !== null,
+      );
+
+      return filteredCrewMembers;
+    }
+  } catch (error) {
+    throw error;
+  }
+}
+
 exports.createProduction = createProduction;
 exports.getProductions = getProductions;
 exports.getProductionsForMainTable = getProductionsForMainTable;
+exports.getProductionById = getProductionById;
+exports.getCrewMembersDetails = getCrewMembersDetails;

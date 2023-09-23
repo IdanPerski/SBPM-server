@@ -4,11 +4,26 @@ const {
   createProduction,
   getProductions,
   getProductionsForMainTable,
+  getProductionById,
+  getCrewMembersDetails,
 } = require("../productionsAccessDataService");
 const terminalColors = require("../../chalk/terminalColors");
 const normalizeProduction = require("../helpers/validations/normalizeProduction");
 const auth = require("../../auth/authService");
+const currentTime = require("../../utils/timeService");
+const ProductionType = require("../models/mongodb/producionTypeSchema");
+const Location = require("../models/mongodb/locationSchema");
 const prodRouter = express.Router();
+
+async function extarctPersonDeatails(crewMembers, crewMemberDetails = {}) {
+  for (const key in crewMembers) {
+    if (Array.isArray(crewMembers[key])) {
+      crewMemberDetails[key] = await getCrewMembersDetails(crewMembers[key]);
+    } else {
+      crewMemberDetails[key] = await getCrewMembersDetails(crewMembers[key]);
+    }
+  }
+}
 
 prodRouter.get("/", async (req, res) => {
   console.log(terminalColors.safe("call from homePage"));
@@ -16,6 +31,44 @@ prodRouter.get("/", async (req, res) => {
   try {
     const productions = await getProductionsForMainTable();
     return res.send(productions);
+  } catch (error) {
+    return handleError(res, error.status || 500, error.message);
+  }
+});
+prodRouter.get("/:id", async (req, res) => {
+  console.log(terminalColors.lemon("asking for production details"));
+
+  try {
+    const production = await getProductionById(req.params.id);
+    const productionType = await ProductionType.findById(
+      production.productionType,
+    );
+    const type = productionType.name;
+
+    const location = await Location.findById(production.location);
+
+    console.log(terminalColors.lemon("location", location));
+
+    const controlRoomCrew = production.controlRoomCrew.toJSON();
+    const controlRoomCrewDetails = {};
+
+    const fieldCrew = production.fieldCrew.toJSON();
+    const fieldCrewDetails = {};
+
+    const talents = production.talents;
+    console.log(talents);
+    const talentsDetails = {};
+
+    await extarctPersonDeatails(controlRoomCrew, controlRoomCrewDetails);
+    await extarctPersonDeatails(fieldCrew, fieldCrewDetails);
+    await extarctPersonDeatails(talents, talentsDetails);
+    res.send({
+      controlRoomCrewDetails,
+      fieldCrewDetails,
+      type,
+      location,
+      talentsDetails,
+    });
   } catch (error) {
     return handleError(res, error.status || 500, error.message);
   }
