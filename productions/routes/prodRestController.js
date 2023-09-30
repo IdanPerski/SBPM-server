@@ -6,6 +6,7 @@ const {
   getProductionsForMainTable,
   getProductionById,
   getCrewMembersDetails,
+  deleteProduction,
 } = require("../productionsAccessDataService");
 const terminalColors = require("../../chalk/terminalColors");
 const normalizeProduction = require("../helpers/validations/normalizeProduction");
@@ -30,9 +31,13 @@ prodRouter.get("/", async (req, res) => {
 
   try {
     const productions = await getProductionsForMainTable();
+
     return res.send(productions);
   } catch (error) {
-    return handleError(res, error.status || 500, error.message);
+    const statusCode = error.status || 500;
+
+    console.log(statusCode);
+    return handleError(res, statusCode, error.message);
   }
 });
 prodRouter.get("/:id", async (req, res) => {
@@ -96,14 +101,14 @@ prodRouter.post("/addProduction", async (req, res) => {
   }
 });
 
-prodRouter.delete("/:id", auth, async (req, res) => {
+prodRouter.delete("/:id" /* , auth */, async (req, res) => {
   try {
     const productionId = req.params.id;
     const user = req.user;
     // console.log(req);
     console.log(terminalColors.danger(productionId));
-    console.log(terminalColors.danger(req));
-    const productionToDelete = await deleteCard(productionId, user);
+    console.log(terminalColors.danger(req.user));
+    const productionToDelete = await deleteProduction(productionId, user);
     return res.send(productionToDelete);
   } catch (error) {
     return handleError(res, error.status || 500, error.message);
