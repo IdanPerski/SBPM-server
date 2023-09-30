@@ -46,8 +46,19 @@ const getProductionsForMainTable = async () => {
   if (DB === "MONGODB") {
     try {
       const productions = await Production.find().populate("location");
+
+      const currentDate = new Date();
+
+      // Filter productions to keep only future productions
+      const futureProductions = productions.filter((production) => {
+        // Parse the production date from string to Date object
+        const productionDate = new Date(production.date);
+        // Compare the production date with the current date
+        return productionDate >= currentDate;
+      });
+
       const productionDetails = await Promise.all(
-        productions.map(async (_production) => {
+        futureProductions.map(async (_production) => {
           const _id = _production._id;
           const locationName = `${_production.location.name}, ${_production.location.address.city}`;
           const { day, month, year } = currentTime(_production.date);
@@ -58,6 +69,9 @@ const getProductionsForMainTable = async () => {
           const weatherData = await getWeatherIcon(
             _production.location.address.city,
           );
+          if (weatherData === "ENOTFOUND") {
+            console.log(terminalColors.lemon("city not found"));
+          }
 
           return {
             _id,
@@ -102,8 +116,7 @@ async function getCrewMembersDetails(crewMemberIds) {
       const crewMember = await Person.findById(crewMemberIds);
       if (crewMember) {
         return Promise.resolve({
-          firstName: crewMember.firstName,
-          lastName: crewMember.lastName,
+          name: `${crewMember.firstName} ${crewMember.lastName}`,
           _id: crewMember._id,
         });
       }
@@ -113,8 +126,7 @@ async function getCrewMembersDetails(crewMemberIds) {
           const crewMember = await Person.findById(crewMemberId);
           if (crewMember) {
             return {
-              firstName: crewMember.firstName,
-              lastName: crewMember.lastName,
+              name: `${crewMember.firstName} ${crewMember.lastName}`,
               _id: crewMember._id,
             };
           }
@@ -134,8 +146,33 @@ async function getCrewMembersDetails(crewMemberIds) {
   }
 }
 
+const deleteProduction = async (productionId, userId) => {
+  if (DB === "MONGODB") {
+    try {
+      const production = await Production.findById(productionId);
+      if (!production)
+        throw new Error("couldn't find this production in the database");
+      // if (!userId.isAdmin) throw new Error("this user in not an admin");
+      /*  if (userId.isAdmin || card.user_id.toString() == userId) {
+        await Card.findByIdAndDelete(productionId);
+        return Promise.resolve("Card deleted successfully");
+      } else {
+        throw new Error("You don't have permission to delete this card");
+      } */
+
+      await Production.findByIdAndDelete(productionId);
+      return Promise.resolve("production deleted successfully");
+    } catch (error) {
+      error.status = 404;
+      return createError("Mongoose", error);
+    }
+  }
+  return Promise.resolve("deleteProduction not in mongodb");
+};
+
 exports.createProduction = createProduction;
 exports.getProductions = getProductions;
 exports.getProductionsForMainTable = getProductionsForMainTable;
 exports.getProductionById = getProductionById;
 exports.getCrewMembersDetails = getCrewMembersDetails;
+exports.deleteProduction = deleteProduction;
