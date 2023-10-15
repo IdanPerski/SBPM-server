@@ -80,7 +80,6 @@ prodRouter.get("/:id", async (req, res) => {
 });
 
 prodRouter.post("/addProduction", async (req, res) => {
-  console.log(terminalColors.safe("post production"));
   try {
     let production = req.body;
     const user = production.user_id;
