@@ -7,24 +7,40 @@ const config = require("config");
 const terminalColors = require("../../chalk/terminalColors");
 const DB = config.get("DB");
 
+const getAllUSers = async (schema) => {
+  if (DB === "MONGODB") {
+    try {
+      const data = await schema.find({}, { password: 0, __v: 0 });
+      console.log(terminalColors.lemon("this is all users:"), data);
+      return Promise.resolve(data);
+    } catch (error) {
+      console.log(terminalColors.danger(`getAllUSers catch from ${schema} `));
+      return createError("Mongoose", error);
+    }
+  }
+  return Promise.resolve("get users not in mongodb");
+};
+
 const registerUser = async (normalizedUser) => {
-  console.log(normalizedUser, "!!!!!!!!!!!");
+  console.log(terminalColors.lemon("normalizedUser:"), normalizedUser);
+
   if (DB === "MONGODB") {
     try {
       const {
         contact: { email },
       } = normalizedUser;
-
+      console.log(email);
       let user = await Person.findOne({ email });
+
       if (user) {
-        console.log(user);
-        log;
+        console.log(terminalColors.lemon("USER:"), user);
+
         throw new Error("User already registered");
       }
       user = new Person(normalizedUser);
       console.log(terminalColors.safe("!!!!!!!!!!!!"), user);
       user = await user.save();
-      console.log(terminalColors.lemon("!!!!!!!!!!!!"));
+      console.log(terminalColors.lemon(_.pick(user, ["roles"])));
       user = _.pick(user, ["name", "contact", "_id"]);
       return Promise.resolve(user);
       d;
@@ -59,3 +75,4 @@ const loginUser = async ({ email, password }) => {
 
 exports.registerUser = registerUser;
 exports.loginUser = loginUser;
+exports.getAllUSers = getAllUSers;

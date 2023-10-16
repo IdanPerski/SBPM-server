@@ -32,12 +32,17 @@ function shuffleArray(array) {
 const shuffledRolesArray = shuffleArray(rolesArray);
 
 const generateFakePerson = () => {
+  //TODO change the person scheme at the faker to same person schema at the users
   const fakePerson = {
-    firstName: faker.person.firstName(),
-    lastName: faker.person.lastName(),
+    name: {
+      firstName: faker.person.firstName(),
+      lastName: faker.person.lastName(),
+    },
     roles: [],
-    email: faker.internet.email(),
-    phoneNumber: faker.phone.number("+97252#######"),
+    contact: {
+      email: faker.internet.email(),
+      phoneNumber: faker.phone.number("+97252#######"),
+    },
   };
 
   // Generate a random number of roles between 1 and the length of rolesArray
@@ -53,7 +58,7 @@ const generateFakePerson = () => {
     });
   }
 
-  console.log(textColor.lemon(fakePerson));
+  console.log(textColor.lemon(fakePerson), fakePerson);
   return fakePerson;
 };
 

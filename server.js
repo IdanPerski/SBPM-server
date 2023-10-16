@@ -27,6 +27,6 @@ app.listen(PORT, () => {
 
   connectToDb();
 
-  // generateFakeData();
+  generateFakeData();
   // deleteAllDataBase();
 });

@@ -8,6 +8,7 @@ const createFakeData = async (
 ) => {
   try {
     const fakeData = new newData(await generateFunction);
+    console.log(textColor.safe("CREATED!:"), fakeData);
     await fakeData.save();
     console.log(textColor.lemon(SuccsesText), fakeData);
   } catch (error) {
