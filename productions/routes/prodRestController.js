@@ -67,6 +67,11 @@ prodRouter.get("/:id", async (req, res) => {
     await extarctPersonDeatails(controlRoomCrew, controlRoomCrewDetails);
     await extarctPersonDeatails(fieldCrew, fieldCrewDetails);
     await extarctPersonDeatails(talents, talentsDetails);
+
+    console.log(
+      terminalColors.danger("controlRoomCrewDetails:"),
+      controlRoomCrewDetails,
+    );
     res.send({
       controlRoomCrewDetails,
       fieldCrewDetails,
@@ -80,6 +85,7 @@ prodRouter.get("/:id", async (req, res) => {
 });
 
 prodRouter.post("/addProduction", async (req, res) => {
+  console.log(terminalColors.lemon("req BODY:"), req.body);
   try {
     let production = req.body;
     const user = production.user_id;

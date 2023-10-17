@@ -115,8 +115,9 @@ async function getCrewMembersDetails(crewMemberIds) {
     if (!Array.isArray(crewMemberIds)) {
       const crewMember = await Person.findById(crewMemberIds);
       if (crewMember) {
+        const { name } = crewMember;
         return Promise.resolve({
-          name: `${crewMember.firstName} ${crewMember.lastName}`,
+          name: `${name.firstName} ${name.lastName}`,
           _id: crewMember._id,
         });
       }
@@ -125,8 +126,9 @@ async function getCrewMembersDetails(crewMemberIds) {
         crewMemberIds.map(async (crewMemberId) => {
           const crewMember = await Person.findById(crewMemberId);
           if (crewMember) {
+            const { name } = crewMember;
             return {
-              name: `${crewMember.firstName} ${crewMember.lastName}`,
+              name: `${name.firstName} ${name.lastName}`,
               _id: crewMember._id,
             };
           }
